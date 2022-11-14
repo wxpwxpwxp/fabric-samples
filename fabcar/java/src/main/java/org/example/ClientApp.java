@@ -50,6 +50,23 @@ public class ClientApp {
 
 			result = contract.evaluateTransaction("queryCar", "CAR10");
 			System.out.println(new String(result));
+
+			String userId = "user1";
+			String word1 = "foo";
+			String word2 = "bar";
+			String state = "[\"wxp\",\"lxr\"]";
+
+			result = contract.submitTransaction("setUserWordState", userId, word1, state);
+			System.out.println("setUserWordState" + new String(result));
+
+			result = contract.submitTransaction("getUserWordState", userId, word1);
+			System.out.println(new String(result));
+
+			result = contract.submitTransaction("hasUserWordState", userId, word1);
+			System.out.println(new String(result));
+
+			result = contract.submitTransaction("hasUserWordState", userId, word2);
+			System.out.println(new String(result));
 		}
 	}
 

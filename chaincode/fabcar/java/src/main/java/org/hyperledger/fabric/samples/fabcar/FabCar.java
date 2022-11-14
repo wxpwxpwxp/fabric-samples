@@ -42,6 +42,9 @@ import com.owlike.genson.Genson;
 @Default
 public final class FabCar implements ContractInterface {
 
+    private final String musseNS = "musse";
+    private final String musseNSTpl = "musse_%s_%s";
+
     private final Genson genson = new Genson();
 
     private enum FabCarErrors {
@@ -186,5 +189,42 @@ public final class FabCar implements ContractInterface {
         stub.putStringState(key, newCarState);
 
         return newCar;
+    }
+
+    private String getMusseField(final String userId, final String word) {
+        return String.format(musseNSTpl, userId, word);
+    }
+
+    @Transaction()
+    public void setUserWordState(final Context ctx, final String userId, final String word, final String state) {
+        ChaincodeStub stub = ctx.getStub();
+
+        stub.putStringState(getMusseField(userId, word), state);
+    }
+
+    @Transaction()
+    public String getUserWordState(final Context ctx, final String userId, final String word) {
+        ChaincodeStub stub = ctx.getStub();
+
+        String state = stub.getStringState(getMusseField(userId, word));
+
+        if (state.isEmpty()) {
+            return "[]";
+        }
+
+        return state;
+    }
+
+    @Transaction()
+    public String hasUserWordState(final Context ctx, final String userId, final String word) {
+        ChaincodeStub stub = ctx.getStub();
+
+        String state = stub.getStringState(getMusseField(userId, word));
+
+        if (state.isEmpty()) {
+            return "false";
+        }
+
+        return "true";
     }
 }
